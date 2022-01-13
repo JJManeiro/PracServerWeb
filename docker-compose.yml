@@ -1,1 +1,20 @@
 version: '3.3'
+services:
+  asir_web:
+    image: httpd
+    ports:
+      - 8000:80
+    volumes:
+      - htdocs:/usr/local/apache2/htdocs
+      - sza:/usr/local/apache2/conf
+    networks:
+      br03: # antes de eso haz docker network create --subnet 10.1.0.0/24 br02
+          ipv4_address: 11.0.0.2
+volumes:
+  htdocs:
+    external: true # tenemos que tenerlo creado previamente
+  sza:
+    external: true  
+networks:
+  br03: 
+    external: true            
