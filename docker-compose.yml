@@ -6,15 +6,29 @@ services:
       - 8000:80
     volumes:
       - htdocs:/usr/local/apache2/htdocs
-      - sza:/usr/local/apache2/conf
+      - sza:/usr/local/apache2/conf  
     networks:
       br03: # antes de eso haz docker network create --subnet 10.1.0.0/24 br02
           ipv4_address: 11.0.0.2
+    dns:
+      - 11.0.0.11      
+  asir_bind9:
+    container_name: asir_bind9
+    image: internetsystemsconsortium/bind9:9.16
+    networks:
+      br03: # antes de eso haz docker network create --subnet 10.1.0.0/24 br02
+          ipv4_address: 11.0.0.11
+    ports:
+      - 53:53
+    volumes:
+      - config:/etc/bind # antes crea el volumen, docker volume create conf.        
 volumes:
   htdocs:
     external: true # tenemos que tenerlo creado previamente
   sza:
-    external: true  
+    external: true
+  config:
+    external: true    
 networks:
   br03: 
     external: true            
