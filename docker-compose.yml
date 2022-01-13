@@ -9,7 +9,7 @@ services:
       - sza:/usr/local/apache2/conf  
     networks:
       br03: # antes de eso haz docker network create --subnet 10.1.0.0/24 br02
-          ipv4_address: 11.0.0.2
+          ipv4_address: 11.0.0.254
     dns:
       - 11.0.0.11      
   asir_bind9:
@@ -21,7 +21,20 @@ services:
     ports:
       - 53:53
     volumes:
-      - config:/etc/bind # antes crea el volumen, docker volume create conf.        
+      - config:/etc/bind # antes crea el volumen, docker volume create conf.
+  asir_desktop:
+    container_name: asir_desktop
+    image: kasmweb/desktop:1.10.0-rolling
+    ports:
+      - 6901:6901
+    networks:
+     - br03
+    stdin_open: true  # docker run -i
+    tty: true         # docker run -t
+    dns:
+      - 11.0.0.11  # el contenedor dns server
+    environment:
+      VNC_PW: Tantalus          
 volumes:
   htdocs:
     external: true # tenemos que tenerlo creado previamente
